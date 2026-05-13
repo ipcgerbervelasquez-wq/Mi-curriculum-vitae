@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financiamiento | AutoElite Guatemala</title>
+    <style>
+        :root {
+            --primary: #e74c3c;
+            --dark: #1a1a1a;
+            --secondary: #2c3e50;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f4f4; color: #333; line-height: 1.6; }
+
+        nav {
+            background-color: var(--dark); color: white; padding: 0 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; height: 70px;
+        }
+        nav h1 { color: var(--primary); font-size: 1.6rem; letter-spacing: 1px; }
+        nav h1 span { color: white; }
+
+        .nav-links { display: flex; list-style: none; }
+        .nav-links li { margin-left: 25px; }
+        .nav-links li a { 
+            color: white; text-decoration: none; font-weight: 500; 
+            transition: 0.3s; 
+        }
+        .nav-links li a:hover { color: var(--primary); }
+
+        .hamburger { 
+            display: none; flex-direction: column; cursor: pointer; gap: 5px; 
+        }
+        .hamburger span { 
+            width: 28px; height: 3px; background: white; 
+            border-radius: 3px; transition: all 0.3s; 
+        }
+
+        .finance-hero {
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
+                        url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 5% 80px;
+            color: white;
+            text-align: center;
+        }
+        .finance-hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 15px; }
+        .finance-hero p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
+
+        .container { padding: 60px 5%; max-width: 1300px; margin: 0 auto; }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        .plans-section h2 { font-size: 2.2rem; margin-bottom: 30px; color: var(--dark); }
+        .plan-item {
+            background: white; padding: 30px; margin-bottom: 20px; border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); transition: 0.3s;
+        }
+        .plan-item:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(231, 76, 60, 0.15); }
+        .plan-item h4 { color: var(--primary); font-size: 1.4rem; margin-bottom: 12px; }
+
+        .calc-card {
+            background: white; padding: 40px; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        .calc-card h3 { text-align: center; margin-bottom: 30px; color: var(--dark); font-size: 1.8rem; }
+
+        .input-group { margin-bottom: 22px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
+        .input-group input, .input-group select {
+            width: 100%; padding: 14px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem;
+        }
+        .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--primary); }
+
+        .result-box {
+            background: var(--dark); color: white; padding: 25px; border-radius: 15px;
+            text-align: center; margin: 25px 0;
+        }
+        .result-box span { font-size: 2.4rem; font-weight: 800; color: var(--primary); display: block; }
+
+        .btn-apply {
+            background: var(--primary); color: white; padding: 16px; border: none;
+            border-radius: 10px; cursor: pointer; width: 100%; font-size: 1.1rem;
+            font-weight: bold; margin-top: 15px; transition: 0.3s;
+        }
+        .btn-apply:hover { background: #c0392b; transform: translateY(-3px); }
+
+        footer { background: var(--dark); color: white; text-align: center; padding: 50px 20px; margin-top: 80px; }
+
+        @media (max-width: 850px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: fixed; top: 70px; right: -100%; width: 85%; max-width: 320px;
+                height: calc(100vh - 70px); background-color: var(--dark);
+                flex-direction: column; align-items: center; padding-top: 50px;
+                transition: 0.4s ease;
+            }
+            .nav-links.active { right: 0; }
+            .main-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>AUTO<span>ELITE</span></h1>
+        <button class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="Inventario.html">Inventario</a></li>
+            <li><a href="Financiamiento.html">Financiamiento</a></li>
+            <li><a href="Contactos.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <header class="finance-hero">
+        <h1>Financiamiento a tu Medida</h1>
+        <p>Planes flexibles para que conduzcas el vehículo de tus sueños</p>
+    </header>
+
+    <div class="container">
+        <div class="main-grid">
+            <!-- Planes -->
+            <section class="plans-section">
+                <h2>Nuestros Planes de Financiamiento</h2>
+                <div class="plan-item"><h4>Crédito Tradicional</h4><p>Plazos de 12 a 60 meses con tasas competitivas y cuotas fijas.</p></div>
+                <div class="plan-item"><h4>Leasing Operativo</h4><p>Renueva tu vehículo cada 2-3 años. Ideal para empresas.</p></div>
+                <div class="plan-item"><h4>Primer Auto</h4><p>Enganche desde 15%. Aprobación rápida.</p></div>
+                <div class="plan-item"><h4>Plan Elite VIP</h4><p>Tasas preferenciales + beneficios exclusivos.</p></div>
+            </section>
+
+            <!-- Calculadora + Formulario -->
+            <section class="calc-card">
+                <h3>Simulador de Cuotas</h3>
+                
+                <div class="input-group">
+                    <label>Precio del Vehículo (Q)</label>
+                    <input type="number" id="price" value="250000">
+                </div>
+                <div class="input-group">
+                    <label>Enganche (Q)</label>
+                    <input type="number" id="downpayment" value="50000">
+                </div>
+                <div class="input-group">
+                    <label>Tasa de Interés Anual (%)</label>
+                    <input type="number" id="interest" step="0.1" value="12">
+                </div>
+                <div class="input-group">
+                    <label>Plazo en Meses</label>
+                    <select id="months">
+                        <option value="12">12 meses</option>
+                        <option value="24">24 meses</option>
+                        <option value="36" selected>36 meses</option>
+                        <option value="48">48 meses</option>
+                        <option value="60">60 meses</option>
+                    </select>
+                </div>
+
+                <div class="result-box">
+                    <p>Cuota Mensual Estimada</p>
+                    <span id="monthly-payment">Q4,850.00</span>
+                </div>
+
+                <hr style="margin: 30px 0; border: 1px solid #eee;">
+
+                <h3 style="text-align:center; margin-bottom:20px;">Solicitar Financiamiento</h3>
+
+                <form action="https://api.web3forms.com/submit" method="POST">
+                    <input type="hidden" name="access_key" value="5beee527-924d-41ed-bacf-0ffe1e774a36">
+                    <input type="hidden" name="subject" value="Nueva Solicitud de Financiamiento - AutoElite">
+                    
+                    <div class="input-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" name="nombre" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Teléfono</label>
+                        <input type="tel" name="telefono" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" name="email" required>
+                    </div>
+
+                    <!-- Datos de la calculadora (se envían automáticamente) -->
+                    <input type="hidden" name="precio_vehiculo" id="hidden_price">
+                    <input type="hidden" name="enganche" id="hidden_down">
+                    <input type="hidden" name="cuota_mensual" id="hidden_payment">
+                    <input type="hidden" name="plazo" id="hidden_months">
+
+                    <button type="submit" class="btn-apply">ENVIAR SOLICITUD DE FINANCIAMIENTO</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 AutoElite Guatemala • Todas las solicitudes están sujetas a aprobación crediticia.</p>
+    </footer>
+
+    <script>
+        // Menú Hamburguesa
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('toggle');
+        });
+
+        // Calculadora
+        const priceInput = document.getElementById('price');
+        const downInput = document.getElementById('downpayment');
+        const interestInput = document.getElementById('interest');
+        const monthsSelect = document.getElementById('months');
+        const resultSpan = document.getElementById('monthly-payment');
+
+        function calculatePayment() {
+            const price = parseFloat(priceInput.value) || 0;
+            const down = parseFloat(downInput.value) || 0;
+            const annualRate = parseFloat(interestInput.value) || 12;
+            const months = parseInt(monthsSelect.value);
+
+            const loanAmount = Math.max(0, price - down);
+            const monthlyRate = annualRate / 100 / 12;
+
+            let payment = 0;
+            if (loanAmount > 0 && months > 0) {
+                payment = (loanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
+            }
+
+            resultSpan.textContent = `Q${payment.toLocaleString('es-GT', {minimumFractionDigits: 2})}`;
+
+            // Guardar valores para enviar por formulario
+            document.getElementById('hidden_price').value = price;
+            document.getElementById('hidden_down').value = down;
+            document.getElementById('hidden_payment').value = payment.toFixed(2);
+            document.getElementById('hidden_months').value = months + " meses";
+        }
+
+        [priceInput, downInput, interestInput, monthsSelect].forEach(el => {
+            el.addEventListener('input', calculatePayment);
+        });
+
+        // Calcular al cargar
+        window.onload = calculatePayment;
+    </script>
+</body>
+</html>

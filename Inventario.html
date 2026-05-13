@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario Pro | AutoElite</title>
+    <style>
+        :root {
+            --primary: #e74c3c;
+            --dark: #1a1a1a;
+            --secondary: #2c3e50;
+            --white: #ffffff;
+            --gray: #f4f4f4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--gray); color: #333; line-height: 1.6; }
+
+        nav {
+            background-color: var(--dark); color: white; padding: 0 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; height: 70px;
+        }
+        nav h1 { color: var(--primary); font-size: 1.5rem; letter-spacing: 1px; }
+        nav h1 span { color: white; }
+
+        .nav-links { 
+            display: flex; list-style: none; 
+        }
+        .nav-links li { margin-left: 25px; }
+        .nav-links li a { 
+            color: white; text-decoration: none; font-weight: 500; 
+            transition: 0.3s; 
+        }
+        .nav-links li a:hover { color: var(--primary); }
+
+        /* Hamburguesa Mejorada */
+        .hamburger { 
+            display: none; 
+            flex-direction: column; 
+            cursor: pointer; 
+            gap: 5px; 
+            z-index: 1100;
+        }
+        .hamburger span { 
+            width: 28px; height: 3px; background: white; 
+            border-radius: 3px; transition: all 0.3s ease; 
+        }
+
+        .inventory-header { 
+            background-color: var(--secondary); color: white; 
+            padding: 50px 5%; text-align: center; 
+        }
+
+        .form-container {
+            background: white; padding: 25px; border-radius: 15px;
+            margin: -30px auto 30px; width: 95%; max-width: 1100px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+            gap: 15px; 
+        }
+        .form-grid input, .form-grid select { 
+            padding: 12px; border: 1px solid #ddd; border-radius: 8px; width: 100%; 
+        }
+
+        .container { padding: 20px 5%; }
+
+        .inventory-table-container { 
+            background: white; border-radius: 15px; padding: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow-x: auto; 
+        }
+        table { 
+            width: 100%; border-collapse: collapse; min-width: 800px; 
+        }
+        th, td { 
+            padding: 14px 10px; text-align: left; border-bottom: 1px solid #eee; 
+        }
+        th { background-color: #f8f9fa; font-weight: 600; color: #555; }
+
+        .status-badge { 
+            padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; 
+            font-weight: 800; text-transform: uppercase; 
+        }
+        .disponible { background: #d4edda; color: #155724; }
+        .reservado { background: #fff3cd; color: #856404; }
+
+        .btn { 
+            padding: 12px 20px; border: none; border-radius: 8px; 
+            cursor: pointer; font-weight: bold; transition: 0.3s; 
+        }
+        .btn-add { background-color: #27ae60; color: white; }
+        .btn-delete { background-color: var(--primary); color: white; }
+        .btn-secondary { background-color: #95a5a6; color: white; }
+
+        .manage-btn { 
+            color: #3498db; background: none; border: none; 
+            font-weight: 600; cursor: pointer; text-decoration: underline; 
+        }
+
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.7);
+            justify-content: center; align-items: center; padding: 15px;
+        }
+        .modal-content { 
+            background: white; padding: 25px; border-radius: 15px; 
+            width: 100%; max-width: 420px; 
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 850px) {
+            .hamburger { display: flex; }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: calc(100vh - 70px);
+                background-color: var(--dark);
+                flex-direction: column;
+                align-items: center;
+                justify-content: start;
+                padding-top: 40px;
+                transition: all 0.4s ease;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+            }
+            .nav-links.active {
+                right: 0;
+            }
+            .nav-links li {
+                margin: 15px 0;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.95rem;
+            }
+
+            .inventory-table-container {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav h1 { font-size: 1.3rem; }
+            .btn { padding: 10px 15px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>AUTO<span>ELITE</span></h1>
+        <button class="hamburger" id="btn-hamburger">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="menu-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="Inventario.html">Inventario</a></li>
+            <li><a href="Financiamiento.html">Financiamiento</a></li>
+            <li><a href="Contactos.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <header class="inventory-header">
+        <h1>Gestión de Stock</h1>
+        <p>Control de unidades en Quetzales (Q).</p>
+    </header>
+
+    <!-- Resto del contenido igual (formulario, tabla, modal) -->
+    <section class="form-container">
+        <h3>Registrar Nuevo Vehículo</h3>
+        <div class="form-grid">
+            <input type="text" id="v_nombre" placeholder="Marca y Modelo">
+            <input type="number" id="v_año" placeholder="Año">
+            <input type="text" id="v_km" placeholder="Kilometraje">
+            <input type="text" id="v_precio" placeholder="Precio (ej: 25000)">
+            <select id="v_estado">
+                <option value="disponible">Disponible</option>
+                <option value="reservado">Reservado</option>
+            </select>
+            <button class="btn btn-add" onclick="agregarVehiculo()">Añadir</button>
+        </div>
+    </section>
+
+    <div class="container">
+        <div style="margin-bottom: 20px;">
+            <button class="btn btn-delete" onclick="quitarReservados()">Limpiar Reservados</button>
+        </div>
+        <div class="inventory-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vista</th>
+                        <th>Vehículo</th>
+                        <th>Año</th>
+                        <th>Kilometraje</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpo-tabla"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalGestion" class="modal">
+        <div class="modal-content">
+            <h3>Gestionar Vehículo</h3>
+            <p id="modal-nombre" style="font-weight: bold; margin: 15px 0; color: var(--secondary);"></p>
+            
+            <label>Nuevo Precio (Q):</label>
+            <input type="text" id="edit-precio" style="width: 100%; margin-bottom: 15px;">
+            
+            <label>Estado:</label>
+            <select id="edit-estado" style="width: 100%; margin-bottom: 15px;">
+                <option value="disponible">Disponible</option>
+                <option value="reservado">Reservado</option>
+            </select>
+            
+            <div>
+                <button class="btn btn-add" onclick="guardarCambios()">Guardar Cambios</button>
+                <button class="btn btn-delete" onclick="eliminarFilaActual()">Eliminar</button>
+                <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // (Mantengo la misma lógica JavaScript que te di anteriormente)
+        let vehicles = [];
+        let filaSeleccionada = null;
+
+        function loadVehicles() {
+            const saved = localStorage.getItem('vehicles');
+            vehicles = saved ? JSON.parse(saved) : [];
+            renderTable();
+        }
+
+        function saveVehicles() {
+            localStorage.setItem('vehicles', JSON.stringify(vehicles));
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('cuerpo-tabla');
+            tbody.innerHTML = vehicles.map((v, index) => `
+                <tr data-index="${index}">
+                    <td><img src="${v.img || 'Imagenes/Carro 1.jpg.jpg'}" style="border-radius: 8px; width: 70px; height: 50px; object-fit: cover;"></td>
+                    <td><strong>${v.name}</strong></td>
+                    <td>${v.año || '2024'}</td>
+                    <td>${v.km || '0 km'}</td>
+                    <td class="td-precio"><span style="color: #e74c3c; font-weight: 800;">${v.price}</span></td>
+                    <td class="td-estado"><span class="status-badge ${v.status}">${v.status}</span></td>
+                    <td><button class="manage-btn" onclick="abrirGestor(this)">Gestionar</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // Resto de funciones (agregarVehiculo, abrirGestor, etc.) permanecen iguales
+        function agregarVehiculo() {
+            const nombre = document.getElementById('v_nombre').value.trim();
+            const precio = document.getElementById('v_precio').value.trim();
+            if (!nombre || !precio) return alert("Marca y precio son obligatorios");
+
+            vehicles.push({
+                id: Date.now(),
+                name: nombre,
+                price: `Q${precio}`,
+                img: "Imagenes/Carro 1.jpg.jpg",
+                status: document.getElementById('v_estado').value,
+                specs: ["Motor: Por definir"]
+            });
+            saveVehicles();
+            renderTable();
+            limpiarFormulario();
+        }
+
+        function abrirGestor(btn) {
+            filaSeleccionada = btn.closest('tr');
+            const index = parseInt(filaSeleccionada.dataset.index);
+            const v = vehicles[index];
+
+            document.getElementById('modal-nombre').innerText = v.name;
+            document.getElementById('edit-precio').value = v.price.replace('Q', '');
+            document.getElementById('edit-estado').value = v.status;
+            document.getElementById('modalGestion').style.display = 'flex';
+        }
+
+        function guardarCambios() {
+            if (!filaSeleccionada) return;
+            const index = parseInt(filaSeleccionada.dataset.index);
+            vehicles[index].price = `Q${document.getElementById('edit-precio').value}`;
+            vehicles[index].status = document.getElementById('edit-estado').value;
+            saveVehicles();
+            renderTable();
+            cerrarModal();
+        }
+
+        function eliminarFilaActual() {
+            if (confirm("¿Eliminar este vehículo?")) {
+                const index = parseInt(filaSeleccionada.dataset.index);
+                vehicles.splice(index, 1);
+                saveVehicles();
+                renderTable();
+                cerrarModal();
+            }
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalGestion').style.display = 'none';
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('v_nombre').value = "";
+            document.getElementById('v_precio').value = "";
+        }
+
+        function quitarReservados() {
+            if (confirm("¿Eliminar todos los vehículos reservados?")) {
+                vehicles = vehicles.filter(v => v.status !== "reservado");
+                saveVehicles();
+                renderTable();
+            }
+        }
+
+        // Menú Hamburguesa
+        const btnHamburger = document.getElementById('btn-hamburger');
+        const menuLinks = document.getElementById('menu-links');
+
+        btnHamburger.addEventListener('click', () => {
+            menuLinks.classList.toggle('active');
+            btnHamburger.classList.toggle('toggle');
+        });
+
+        window.onload = loadVehicles;
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financiamiento | AutoElite Guatemala</title>
+    <style>
+        :root { --primary: #e74c3c; --dark: #1a1a1a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f4f4f4; color: #333; }
+
+        nav { background: var(--dark); color: white; padding: 0 5%; height: 70px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .hamburger span { width: 28px; height: 3px; background: white; transition: 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+        .finance-hero { background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=2000&q=80'); background-size: cover; padding: 120px 5% 80px; color: white; text-align: center; }
+        .container { padding: 60px 5%; max-width: 1300px; margin: 0 auto; }
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .calc-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .input-group input, .input-group select { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 10px; }
+
+        .btn-apply { background: var(--primary); color: white; padding: 16px; border: none; border-radius: 10px; width: 100%; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>AUTO<span>ELITE</span></h1>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="Inventario.html">Inventario</a></li>
+            <li><a href="Financiamiento.html">Financiamiento</a></li>
+            <li><a href="Contactos.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <header class="finance-hero">
+        <h1>Financiamiento a tu Medida</h1>
+    </header>
+
+    <div class="container">
+        <div class="main-grid">
+            <div class="plans-section">
+                <h2>Nuestros Planes</h2>
+                <!-- planes aquí -->
+            </div>
+
+            <div class="calc-card">
+                <h3>Simulador + Solicitud</h3>
+                
+                <!-- Calculadora aquí (puedes mantenerla) -->
+
+                <form action="https://api.web3forms.com/submit" method="POST" id="financeForm">
+                    <input type="hidden" name="access_key" value="6e03a4ce-52c5-4825-ad9a-419eaa0f87a8"> <!-- ← Cambia esta clave -->
+                    
+                    <div class="input-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" name="nombre" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Teléfono</label>
+                        <input type="tel" name="telefono" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" name="email" required>
+                    </div>
+
+                    <button type="submit" class="btn-apply">ENVIAR SOLICITUD</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menú hamburguesa
+        document.getElementById('hamburger').addEventListener('click', () => {
+            document.getElementById('nav-links').classList.toggle('active');
+            document.getElementById('hamburger').classList.toggle('active');
+        });
+
+        // Formulario con mejor manejo
+        const form = document.getElementById('financeForm');
+        form.addEventListener('submit', function(e) {
+            // No hacemos preventDefault para que Web3Forms funcione correctamente
+            console.log("✅ Formulario enviado...");
+        });
+    </script>
+</body>
+</html>
